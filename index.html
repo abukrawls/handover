@@ -135,10 +135,8 @@
 
 .barcode-section svg{
     display:block;
-    width:calc(100% - 48px);   /* sejajar dengan area antara label Status dan badge */
-    max-width:410px;
-    height:158px;              /* lebih mendekati tinggi barcode asli */
-    margin:0 auto;
+    width:100%;
+    height:155px;
 }
 
   .barcode-caption{
@@ -361,9 +359,9 @@
     try{
       JsBarcode('#barcode', code, {
         format: 'CODE128',
-        width: 1.8,
-        height: 158,
-        margin: 12,
+        width: 2.25,
+        height: 155,
+        margin: 18,
         background: '#FFFFFF',
         lineColor: '#000000',
         displayValue: false,
