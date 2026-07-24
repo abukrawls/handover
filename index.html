@@ -129,15 +129,17 @@
 
   /* ================= BARCODE PREVIEW ================= */
   .barcode-section{
-    margin-top:30px;
+    margin-top:28px;
     text-align:center;
-  }
+}
 
-  .barcode-section svg{
-    width:100%;
-    height:170px;
+.barcode-section svg{
     display:block;
-  }
+    width:calc(100% - 48px);   /* sejajar dengan area antara label Status dan badge */
+    max-width:410px;
+    height:158px;              /* lebih mendekati tinggi barcode asli */
+    margin:0 auto;
+}
 
   .barcode-caption{
     margin-top:18px;
@@ -359,9 +361,9 @@
     try{
       JsBarcode('#barcode', code, {
         format: 'CODE128',
-        width: 2,
-        height: 170,
-        margin: 0,
+        width: 1.8,
+        height: 158,
+        margin: 12,
         background: '#FFFFFF',
         lineColor: '#000000',
         displayValue: false,
