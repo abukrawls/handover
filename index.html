@@ -80,7 +80,7 @@
   /* ================= AREA CAPTURE PNG ================= */
   .report-capture{
     background:#FFFFFF;
-    padding:8px 24px 4px;
+    padding:8px 0 4px;
   }
 
   /* ================= INFO ROWS ================= */
@@ -281,7 +281,7 @@
       <!-- ================= BARCODE PREVIEW ================= -->
       <section class="barcode-section">
         <svg id="barcode"></svg>
-        <p class="barcode-caption">Harap tunjukan barcode [<span id="captionCode">HS2026031321FV4</span>]<br>kepada operator untuk memulai<br>penyerahan</p>
+        <p class="barcode-caption">Harap tunjukan barcode [<span id="captionCode">HS2026031321FV4</span>] kepada operator untuk memulai penyerahan</p>
       </section>
 
     </div>
@@ -407,7 +407,18 @@
       backgroundColor: '#FFFFFF',
       useCORS: true
     }).then(function(canvas){
-      canvas.toBlob(function(blob){
+      // Tambahkan quiet zone 24px kiri & kanan pada hasil akhir PNG
+      const scale = 3;
+      const marginPx = 24 * scale;
+      const finalCanvas = document.createElement('canvas');
+      finalCanvas.width = canvas.width + (marginPx * 2);
+      finalCanvas.height = canvas.height;
+      const fctx = finalCanvas.getContext('2d');
+      fctx.fillStyle = '#FFFFFF';
+      fctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+      fctx.drawImage(canvas, marginPx, 0);
+
+      finalCanvas.toBlob(function(blob){
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = (inputBarcode.value.trim() || 'laporan-penyerahan') + '.png';
