@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
   :root{
     --label-color:#8A8A8A;
@@ -74,6 +75,12 @@
     max-width:480px;
     margin:0 auto;
     padding:0 24px 40px;
+  }
+
+  /* ================= AREA CAPTURE PNG ================= */
+  .report-capture{
+    background:#FFFFFF;
+    padding:8px 0 4px;
   }
 
   /* ================= INFO ROWS ================= */
@@ -248,31 +255,36 @@
 
   <div class="container">
 
-    <!-- ================= INFO PREVIEW ================= -->
-    <section class="info-section">
-      <div class="info-row">
-        <span class="info-label">Total Orders</span>
-        <span class="info-value" id="viewOrders">1</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">Driver</span>
-        <span class="info-value" id="viewDriver">[519384]YUSUF ABDUL AJID</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">Penerima</span>
-        <span class="info-value" id="viewPenerima">-</span>
-      </div>
-      <div class="info-row">
-        <span class="info-label">Status</span>
-        <span class="info-value"><span class="badge" id="viewStatus">Tertunda</span></span>
-      </div>
-    </section>
+    <!-- ================= AREA YANG DI-CAPTURE KE PNG ================= -->
+    <div id="reportCapture" class="report-capture">
 
-    <!-- ================= BARCODE PREVIEW ================= -->
-    <section class="barcode-section">
-      <svg id="barcode"></svg>
-      <p class="barcode-caption">Harap tunjukan barcode <span id="captionCode">HS2026031321FV4</span><br>kepada operator untuk memulai<br>penyerahan</p>
-    </section>
+      <!-- ================= INFO PREVIEW ================= -->
+      <section class="info-section">
+        <div class="info-row">
+          <span class="info-label">Total Orders</span>
+          <span class="info-value" id="viewOrders">1</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Driver</span>
+          <span class="info-value" id="viewDriver">[519384]YUSUF ABDUL AJID</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Penerima</span>
+          <span class="info-value" id="viewPenerima">-</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Status</span>
+          <span class="info-value"><span class="badge" id="viewStatus">Tertunda</span></span>
+        </div>
+      </section>
+
+      <!-- ================= BARCODE PREVIEW ================= -->
+      <section class="barcode-section">
+        <svg id="barcode"></svg>
+        <p class="barcode-caption">Harap tunjukan barcode <span id="captionCode">HS2026031321FV4</span><br>kepada operator untuk memulai<br>penyerahan</p>
+      </section>
+
+    </div>
 
     <div class="divider"></div>
 
@@ -384,29 +396,30 @@
   document.getElementById('generateBtn').addEventListener('click', updatePreview);
 
   document.getElementById('saveBtn').addEventListener('click', function(){
-    const svg = document.getElementById('barcode');
-    const svgData = new XMLSerializer().serializeToString(svg);
-    const svgBlob = new Blob([svgData], {type:'image/svg+xml;charset=utf-8'});
-    const url = URL.createObjectURL(svgBlob);
-    const img = new Image();
-    img.onload = function(){
-      const canvas = document.createElement('canvas');
-      const scale = 3;
-      canvas.width = img.width * scale || 800;
-      canvas.height = img.height * scale || 170*scale;
-      const ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#FFFFFF';
-      ctx.fillRect(0,0,canvas.width,canvas.height);
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      URL.revokeObjectURL(url);
+    const target = document.getElementById('reportCapture');
+    const saveBtn = this;
+    const originalLabel = saveBtn.textContent;
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Menyimpan...';
+
+    html2canvas(target, {
+      scale: 3,
+      backgroundColor: '#FFFFFF',
+      useCORS: true
+    }).then(function(canvas){
       canvas.toBlob(function(blob){
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = (inputBarcode.value.trim() || 'barcode') + '.png';
+        a.download = (inputBarcode.value.trim() || 'laporan-penyerahan') + '.png';
         a.click();
+        saveBtn.disabled = false;
+        saveBtn.textContent = originalLabel;
       });
-    };
-    img.src = url;
+    }).catch(function(err){
+      console.error('Gagal menyimpan PNG:', err);
+      saveBtn.disabled = false;
+      saveBtn.textContent = originalLabel;
+    });
   });
 
   document.getElementById('printBtn').addEventListener('click', function(){
