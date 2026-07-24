@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tugas Penyerahan</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/JsBarcode/3.11.5/JsBarcode.all.min.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #FFFFFF;
+    font-family: 'Roboto', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    color: #222222;
+    display: flex;
+    justify-content: center;
+  }
+
+  .phone-frame {
+    width: 100%;
+    max-width: 480px;
+    min-height: 100vh;
+    background: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ================= HEADER ================= */
+  .header {
+    height: 56px;
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    background: #FFFFFF;
+  }
+
+  .icon-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    color: #222222;
+    padding: 0;
+  }
+
+  .icon-btn:hover {
+    background: rgba(0, 0, 0, 0.06);
+  }
+
+  .icon-btn svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .header-title {
+    flex: 1;
+    font-size: 22px;
+    font-weight: 500;
+    color: #222222;
+    padding-left: 8px;
+    letter-spacing: 0;
+  }
+
+  /* ================= PREVIEW / BODY ================= */
+  .content {
+    padding: 20px 24px 0 24px;
+  }
+
+  .info-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    gap: 12px;
+  }
+
+  .info-label {
+    font-size: 16px;
+    font-weight: 400;
+    color: #8A8A8A;
+    white-space: nowrap;
+  }
+
+  .info-value {
+    font-size: 17px;
+    font-weight: 500;
+    color: #222222;
+    text-align: right;
+    word-break: break-word;
+  }
+
+  .badge {
+    display: inline-block;
+    background: #FFE7A6;
+    color: #A36A00;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 6px;
+    padding: 4px 10px;
+  }
+
+  .barcode-wrap {
+    margin-top: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  #barcode-svg {
+    width: 100%;
+    height: 170px;
+  }
+
+  .barcode-caption {
+    margin-top: 18px;
+    text-align: center;
+    color: #666666;
+    font-size: 16px;
+    line-height: 1.35;
+    padding: 0 4px 28px 4px;
+  }
+
+  /* ================= EDIT PANEL ================= */
+  .panel {
+    border-top: 8px solid #F5F5F5;
+    padding: 24px;
+  }
+
+  .panel-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: #222222;
+    margin: 0 0 16px 0;
+  }
+
+  .field {
+    margin-bottom: 16px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 13px;
+    color: #8A8A8A;
+    margin-bottom: 6px;
+  }
+
+  .field input,
+  .field select {
+    width: 100%;
+    font-family: 'Roboto', Arial, sans-serif;
+    font-size: 16px;
+    color: #222222;
+    padding: 10px 12px;
+    border: 1px solid #DDDDDD;
+    border-radius: 6px;
+    background: #FFFFFF;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+
+  .field input:focus,
+  .field select:focus {
+    border-color: #1A73E8;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .btn {
+    flex: 1 1 auto;
+    min-width: 120px;
+    font-family: 'Roboto', Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    padding: 10px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .btn-primary {
+    background: #1A73E8;
+    color: #FFFFFF;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  }
+
+  .btn-primary:hover {
+    background: #1665D8;
+  }
+
+  .btn-secondary {
+    background: #FFFFFF;
+    color: #1A73E8;
+    border: 1px solid #1A73E8;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(26, 115, 232, 0.06);
+  }
+
+  @media print {
+    .header, .panel, .app-bar-spacer {
+      display: none !important;
+    }
+    .content {
+      padding: 0 24px;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <div class="phone-frame">
+
+    <!-- HEADER -->
+    <div class="header">
+      <button class="icon-btn" aria-label="Kembali" onclick="history.back()">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="#222222"/>
+        </svg>
+      </button>
+      <div class="header-title">Tugas penyerahan</div>
+      <button class="icon-btn" aria-label="Refresh" onclick="location.reload()">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08a5.99 5.99 0 0 1-5.65 4c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" fill="#222222"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- PREVIEW CONTENT -->
+    <div class="content">
+
+      <div class="info-row">
+        <span class="info-label">Total Orders</span>
+        <span class="info-value" id="prev-orders">1</span>
+      </div>
+
+      <div class="info-row">
+        <span class="info-label">Driver</span>
+        <span class="info-value" id="prev-driver">[519384]YUSUF ABDUL AJID</span>
+      </div>
+
+      <div class="info-row">
+        <span class="info-label">Penerima</span>
+        <span class="info-value" id="prev-penerima">-</span>
+      </div>
+
+      <div class="info-row">
+        <span class="info-label">Status</span>
+        <span class="info-value"><span class="badge" id="prev-status">Tertunda</span></span>
+      </div>
+
+      <div class="barcode-wrap">
+        <svg id="barcode-svg"></svg>
+      </div>
+
+      <div class="barcode-caption" id="prev-caption">
+        Harap tunjukan barcode [HS2026031321FV4]<br>
+        kepada operator untuk memulai<br>
+        penyerahan
+      </div>
+
+    </div>
+
+    <!-- EDIT PANEL -->
+    <div class="panel">
+      <p class="panel-title">Edit data</p>
+
+      <div class="field">
+        <label for="in-orders">Total Orders</label>
+        <input type="number" id="in-orders" value="1" min="0">
+      </div>
+
+      <div class="field">
+        <label for="in-driver">Driver</label>
+        <input type="text" id="in-driver" value="[519384]YUSUF ABDUL AJID">
+      </div>
+
+      <div class="field">
+        <label for="in-penerima">Penerima</label>
+        <input type="text" id="in-penerima" value="-">
+      </div>
+
+      <div class="field">
+        <label for="in-status">Status</label>
+        <select id="in-status">
+          <option value="Tertunda" selected>Tertunda</option>
+          <option value="Siap">Siap</option>
+          <option value="Diproses">Diproses</option>
+          <option value="Selesai">Selesai</option>
+          <option value="Dibatalkan">Dibatalkan</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="in-barcode">Nomor Barcode</label>
+        <input type="text" id="in-barcode" value="HS2026031321FV4">
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="btn-generate">Generate Barcode</button>
+        <button class="btn btn-secondary" id="btn-save">Simpan PNG</button>
+        <button class="btn btn-secondary" id="btn-print">Print</button>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  const statusColors = {
+    'Tertunda':   { bg: '#FFE7A6', fg: '#A36A00' },
+    'Siap':       { bg: '#C8F0D8', fg: '#0F7B3C' },
+    'Diproses':   { bg: '#CFE3FF', fg: '#1A54B0' },
+    'Selesai':    { bg: '#D4F4D4', fg: '#1E8E3E' },
+    'Dibatalkan': { bg: '#FBD5D5', fg: '#B3261E' }
+  };
+
+  const els = {
+    orders: document.getElementById('in-orders'),
+    driver: document.getElementById('in-driver'),
+    penerima: document.getElementById('in-penerima'),
+    status: document.getElementById('in-status'),
+    barcode: document.getElementById('in-barcode'),
+  };
+
+  const prev = {
+    orders: document.getElementById('prev-orders'),
+    driver: document.getElementById('prev-driver'),
+    penerima: document.getElementById('prev-penerima'),
+    status: document.getElementById('prev-status'),
+    caption: document.getElementById('prev-caption'),
+  };
+
+  function renderBarcode() {
+    const value = els.barcode.value.trim() || ' ';
+    try {
+      JsBarcode('#barcode-svg', value, {
+        format: 'CODE128',
+        width: 2,
+        height: 170,
+        margin: 0,
+        background: '#FFFFFF',
+        lineColor: '#000000',
+        displayValue: false,
+        flat: true
+      });
+    } catch (e) {
+      console.error('Barcode error:', e);
+    }
+  }
+
+  function renderPreview() {
+    prev.orders.textContent = els.orders.value;
+    prev.driver.textContent = els.driver.value;
+    prev.penerima.textContent = els.penerima.value || '-';
+
+    const statusVal = els.status.value;
+    prev.status.textContent = statusVal;
+    const colors = statusColors[statusVal] || statusColors['Tertunda'];
+    prev.status.style.background = colors.bg;
+    prev.status.style.color = colors.fg;
+
+    const code = els.barcode.value.trim() || '-';
+    prev.caption.innerHTML = `Harap tunjukan barcode [${code}]<br>kepada operator untuk memulai<br>penyerahan`;
+
+    renderBarcode();
+  }
+
+  Object.values(els).forEach(el => {
+    el.addEventListener('input', renderPreview);
+    el.addEventListener('change', renderPreview);
+  });
+
+  document.getElementById('btn-generate').addEventListener('click', renderPreview);
+
+  document.getElementById('btn-print').addEventListener('click', () => {
+    window.print();
+  });
+
+  document.getElementById('btn-save').addEventListener('click', () => {
+    const svg = document.getElementById('barcode-svg');
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(svgBlob);
+
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const scale = 3;
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.scale(scale, scale);
+      ctx.drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
+
+      canvas.toBlob((blob) => {
+        const link = document.createElement('a');
+        link.download = `barcode-${els.barcode.value.trim() || 'export'}.png`;
+        link.href = URL.createObjectURL(blob);
+        link.click();
+      });
+    };
+    img.src = url;
+  });
+
+  // initial render
+  renderPreview();
+</script>
+
+</body>
+</html>
