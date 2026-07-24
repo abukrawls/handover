@@ -4,307 +4,300 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tugas Penyerahan</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/JsBarcode/3.11.5/JsBarcode.all.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"></script>
 <style>
-  * {
-    box-sizing: border-box;
+  :root{
+    --label-color:#8A8A8A;
+    --value-color:#222222;
+    --badge-bg:#FFE7A6;
+    --badge-color:#A36A00;
+    --divider:#EDEDED;
+    --primary:#1A73E8;
   }
 
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: #FFFFFF;
-    font-family: 'Roboto', Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
-  body {
-    color: #222222;
-    display: flex;
-    justify-content: center;
-  }
-
-  .phone-frame {
-    width: 100%;
-    max-width: 480px;
-    min-height: 100vh;
-    background: #FFFFFF;
-    display: flex;
-    flex-direction: column;
+  html,body{
+    margin:0;
+    padding:0;
+    background:#FFFFFF;
+    font-family:'Roboto', Arial, sans-serif;
+    color:var(--value-color);
   }
 
   /* ================= HEADER ================= */
-  .header {
-    height: 56px;
-    min-height: 56px;
-    display: flex;
-    align-items: center;
-    padding: 0 8px;
-    background: #FFFFFF;
+  .app-header{
+    height:56px;
+    display:flex;
+    align-items:center;
+    padding:0 4px;
+    background:#FFFFFF;
+    position:sticky;
+    top:0;
+    z-index:10;
+    box-shadow:0 1px 3px rgba(0,0,0,0.08);
   }
 
-  .icon-btn {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: none;
-    border: none;
-    cursor: pointer;
-    border-radius: 50%;
-    color: #222222;
-    padding: 0;
+  .icon-btn{
+    width:40px;
+    height:40px;
+    border:none;
+    background:transparent;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    cursor:pointer;
+    color:#222;
+    flex-shrink:0;
   }
 
-  .icon-btn:hover {
-    background: rgba(0, 0, 0, 0.06);
+  .icon-btn:hover{ background:rgba(0,0,0,0.06); }
+  .icon-btn:active{ background:rgba(0,0,0,0.12); }
+
+  .icon-btn svg{ width:24px; height:24px; }
+
+  .app-header h1{
+    font-size:22px;
+    font-weight:500;
+    color:#222222;
+    margin:0 0 0 4px;
+    flex:1;
+    letter-spacing:0.1px;
   }
 
-  .icon-btn svg {
-    width: 24px;
-    height: 24px;
+  /* ================= CONTAINER ================= */
+  .container{
+    max-width:480px;
+    margin:0 auto;
+    padding:0 24px 40px;
   }
 
-  .header-title {
-    flex: 1;
-    font-size: 22px;
-    font-weight: 500;
-    color: #222222;
-    padding-left: 8px;
-    letter-spacing: 0;
+  /* ================= INFO ROWS ================= */
+  .info-section{
+    padding-top:16px;
   }
 
-  /* ================= PREVIEW / BODY ================= */
-  .content {
-    padding: 20px 24px 0 24px;
+  .info-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:9px 0;
+    min-height:18px;
   }
 
-  .info-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 18px;
-    gap: 12px;
+  .info-row + .info-row{
+    margin-top:0;
   }
 
-  .info-label {
-    font-size: 16px;
-    font-weight: 400;
-    color: #8A8A8A;
-    white-space: nowrap;
+  .info-label{
+    font-size:16px;
+    font-weight:400;
+    color:var(--label-color);
+    flex:0 0 auto;
   }
 
-  .info-value {
-    font-size: 17px;
-    font-weight: 500;
-    color: #222222;
-    text-align: right;
-    word-break: break-word;
+  .info-value{
+    font-size:17px;
+    font-weight:500;
+    color:var(--value-color);
+    text-align:right;
+    flex:1;
+    margin-left:16px;
+    overflow-wrap:anywhere;
   }
 
-  .badge {
-    display: inline-block;
-    background: #FFE7A6;
-    color: #A36A00;
-    font-size: 15px;
-    font-weight: 500;
-    border-radius: 6px;
-    padding: 4px 10px;
+  .badge{
+    display:inline-block;
+    background:var(--badge-bg);
+    color:var(--badge-color);
+    font-size:14px;
+    font-weight:500;
+    border-radius:6px;
+    padding:4px 10px;
   }
 
-  .barcode-wrap {
-    margin-top: 30px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
+  /* ================= BARCODE PREVIEW ================= */
+  .barcode-section{
+    margin-top:30px;
+    text-align:center;
   }
 
-  #barcode-svg {
-    width: 100%;
-    height: 170px;
+  .barcode-section svg{
+    width:100%;
+    height:170px;
+    display:block;
   }
 
-  .barcode-caption {
-    margin-top: 18px;
-    text-align: center;
-    color: #666666;
-    font-size: 16px;
-    line-height: 1.35;
-    padding: 0 4px 28px 4px;
+  .barcode-caption{
+    margin-top:18px;
+    font-size:16px;
+    line-height:1.35;
+    color:#666666;
+    text-align:center;
   }
 
-  /* ================= EDIT PANEL ================= */
-  .panel {
-    border-top: 8px solid #F5F5F5;
-    padding: 24px;
+  /* ================= DIVIDER ================= */
+  .divider{
+    height:1px;
+    background:var(--divider);
+    margin:28px 0;
   }
 
-  .panel-title {
-    font-size: 16px;
-    font-weight: 500;
-    color: #222222;
-    margin: 0 0 16px 0;
+  /* ================= FORM ================= */
+  .form-panel h2{
+    font-size:16px;
+    font-weight:500;
+    color:#222;
+    margin:0 0 16px;
   }
 
-  .field {
-    margin-bottom: 16px;
+  .field{
+    margin-bottom:18px;
   }
 
-  .field label {
-    display: block;
-    font-size: 13px;
-    color: #8A8A8A;
-    margin-bottom: 6px;
+  .field label{
+    display:block;
+    font-size:13px;
+    color:var(--label-color);
+    margin-bottom:6px;
   }
 
   .field input,
-  .field select {
-    width: 100%;
-    font-family: 'Roboto', Arial, sans-serif;
-    font-size: 16px;
-    color: #222222;
-    padding: 10px 12px;
-    border: 1px solid #DDDDDD;
-    border-radius: 6px;
-    background: #FFFFFF;
-    outline: none;
-    transition: border-color 0.15s ease;
+  .field select{
+    width:100%;
+    font-family:inherit;
+    font-size:16px;
+    color:#222;
+    padding:10px 12px;
+    border:1px solid #DADCE0;
+    border-radius:6px;
+    background:#FFFFFF;
+    outline:none;
+    transition:border-color .15s ease, box-shadow .15s ease;
   }
 
   .field input:focus,
-  .field select:focus {
-    border-color: #1A73E8;
+  .field select:focus{
+    border-color:var(--primary);
+    box-shadow:0 0 0 1px var(--primary);
   }
 
-  .actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 20px;
+  /* ================= BUTTONS ================= */
+  .actions{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    margin-top:24px;
   }
 
-  .btn {
-    flex: 1 1 auto;
-    min-width: 120px;
-    font-family: 'Roboto', Arial, sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-    padding: 10px 16px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+  .btn{
+    width:100%;
+    padding:12px 16px;
+    font-family:inherit;
+    font-size:14px;
+    font-weight:500;
+    letter-spacing:0.3px;
+    border-radius:6px;
+    border:none;
+    cursor:pointer;
+    text-transform:uppercase;
+    transition:background-color .15s ease, box-shadow .15s ease;
   }
 
-  .btn-primary {
-    background: #1A73E8;
-    color: #FFFFFF;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  .btn-primary{
+    background:var(--primary);
+    color:#FFFFFF;
+    box-shadow:0 1px 2px rgba(0,0,0,0.2);
+  }
+  .btn-primary:hover{ background:#1765CC; }
+  .btn-primary:active{ background:#155ABD; }
+
+  .btn-outline{
+    background:#FFFFFF;
+    color:var(--primary);
+    border:1px solid #DADCE0;
+  }
+  .btn-outline:hover{ background:rgba(26,115,232,0.06); }
+
+  @media (max-width:380px){
+    .container{ padding:0 16px 32px; }
+    .app-header h1{ font-size:20px; }
   }
 
-  .btn-primary:hover {
-    background: #1665D8;
-  }
-
-  .btn-secondary {
-    background: #FFFFFF;
-    color: #1A73E8;
-    border: 1px solid #1A73E8;
-  }
-
-  .btn-secondary:hover {
-    background: rgba(26, 115, 232, 0.06);
-  }
-
-  @media print {
-    .header, .panel, .app-bar-spacer {
-      display: none !important;
-    }
-    .content {
-      padding: 0 24px;
-    }
+  @media print{
+    .app-header, .form-panel, .actions, .divider{ display:none; }
+    .container{ padding:0; max-width:100%; }
   }
 </style>
 </head>
 <body>
 
-  <div class="phone-frame">
+  <header class="app-header">
+    <button class="icon-btn" id="backBtn" aria-label="Kembali">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </button>
+    <h1>Tugas penyerahan</h1>
+    <button class="icon-btn" id="refreshBtn" aria-label="Refresh">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08a5.99 5.99 0 01-5.65 4c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L14 11h7V4l-2.35 2.35z"/></svg>
+    </button>
+  </header>
 
-    <!-- HEADER -->
-    <div class="header">
-      <button class="icon-btn" aria-label="Kembali" onclick="history.back()">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="#222222"/>
-        </svg>
-      </button>
-      <div class="header-title">Tugas penyerahan</div>
-      <button class="icon-btn" aria-label="Refresh" onclick="location.reload()">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08a5.99 5.99 0 0 1-5.65 4c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" fill="#222222"/>
-        </svg>
-      </button>
-    </div>
+  <div class="container">
 
-    <!-- PREVIEW CONTENT -->
-    <div class="content">
-
+    <!-- ================= INFO PREVIEW ================= -->
+    <section class="info-section">
       <div class="info-row">
         <span class="info-label">Total Orders</span>
-        <span class="info-value" id="prev-orders">1</span>
+        <span class="info-value" id="viewOrders">1</span>
       </div>
-
       <div class="info-row">
         <span class="info-label">Driver</span>
-        <span class="info-value" id="prev-driver">[519384]YUSUF ABDUL AJID</span>
+        <span class="info-value" id="viewDriver">[519384]YUSUF ABDUL AJID</span>
       </div>
-
       <div class="info-row">
         <span class="info-label">Penerima</span>
-        <span class="info-value" id="prev-penerima">-</span>
+        <span class="info-value" id="viewPenerima">-</span>
       </div>
-
       <div class="info-row">
         <span class="info-label">Status</span>
-        <span class="info-value"><span class="badge" id="prev-status">Tertunda</span></span>
+        <span class="info-value"><span class="badge" id="viewStatus">Tertunda</span></span>
       </div>
+    </section>
 
-      <div class="barcode-wrap">
-        <svg id="barcode-svg"></svg>
-      </div>
+    <!-- ================= BARCODE PREVIEW ================= -->
+    <section class="barcode-section">
+      <svg id="barcode"></svg>
+      <p class="barcode-caption">Harap tunjukan barcode <span id="captionCode">HS2026031321FV4</span><br>kepada operator untuk memulai<br>penyerahan</p>
+    </section>
 
-      <div class="barcode-caption" id="prev-caption">
-        Harap tunjukan barcode [HS2026031321FV4]<br>
-        kepada operator untuk memulai<br>
-        penyerahan
-      </div>
+    <div class="divider"></div>
 
-    </div>
-
-    <!-- EDIT PANEL -->
-    <div class="panel">
-      <p class="panel-title">Edit data</p>
+    <!-- ================= FORM EDIT ================= -->
+    <section class="form-panel">
+      <h2>Edit Data</h2>
 
       <div class="field">
-        <label for="in-orders">Total Orders</label>
-        <input type="number" id="in-orders" value="1" min="0">
+        <label for="inputOrders">Total Orders</label>
+        <input type="number" id="inputOrders" min="0" value="1">
       </div>
 
       <div class="field">
-        <label for="in-driver">Driver</label>
-        <input type="text" id="in-driver" value="[519384]YUSUF ABDUL AJID">
+        <label for="inputDriver">Driver</label>
+        <input type="text" id="inputDriver" value="[519384]YUSUF ABDUL AJID">
       </div>
 
       <div class="field">
-        <label for="in-penerima">Penerima</label>
-        <input type="text" id="in-penerima" value="-">
+        <label for="inputPenerima">Penerima</label>
+        <input type="text" id="inputPenerima" value="-">
       </div>
 
       <div class="field">
-        <label for="in-status">Status</label>
-        <select id="in-status">
+        <label for="inputStatus">Status</label>
+        <select id="inputStatus">
           <option value="Tertunda" selected>Tertunda</option>
           <option value="Siap">Siap</option>
           <option value="Diproses">Diproses</option>
@@ -314,48 +307,45 @@
       </div>
 
       <div class="field">
-        <label for="in-barcode">Nomor Barcode</label>
-        <input type="text" id="in-barcode" value="HS2026031321FV4">
+        <label for="inputBarcode">Nomor Barcode</label>
+        <input type="text" id="inputBarcode" value="HS2026031321FV4">
       </div>
 
       <div class="actions">
-        <button class="btn btn-primary" id="btn-generate">Generate Barcode</button>
-        <button class="btn btn-secondary" id="btn-save">Simpan PNG</button>
-        <button class="btn btn-secondary" id="btn-print">Print</button>
+        <button class="btn btn-primary" id="generateBtn">Generate Barcode</button>
+        <button class="btn btn-outline" id="saveBtn">Simpan PNG</button>
+        <button class="btn btn-outline" id="printBtn">Print</button>
       </div>
-    </div>
+    </section>
 
   </div>
 
 <script>
+(function(){
   const statusColors = {
-    'Tertunda':   { bg: '#FFE7A6', fg: '#A36A00' },
-    'Siap':       { bg: '#C8F0D8', fg: '#0F7B3C' },
-    'Diproses':   { bg: '#CFE3FF', fg: '#1A54B0' },
-    'Selesai':    { bg: '#D4F4D4', fg: '#1E8E3E' },
-    'Dibatalkan': { bg: '#FBD5D5', fg: '#B3261E' }
+    'Tertunda':  { bg:'#FFE7A6', color:'#A36A00' },
+    'Siap':      { bg:'#C8E6C9', color:'#1B5E20' },
+    'Diproses':  { bg:'#BBDEFB', color:'#0D47A1' },
+    'Selesai':   { bg:'#C8E6C9', color:'#1B5E20' },
+    'Dibatalkan':{ bg:'#FFCDD2', color:'#B71C1C' }
   };
 
-  const els = {
-    orders: document.getElementById('in-orders'),
-    driver: document.getElementById('in-driver'),
-    penerima: document.getElementById('in-penerima'),
-    status: document.getElementById('in-status'),
-    barcode: document.getElementById('in-barcode'),
-  };
+  const inputOrders   = document.getElementById('inputOrders');
+  const inputDriver   = document.getElementById('inputDriver');
+  const inputPenerima = document.getElementById('inputPenerima');
+  const inputStatus   = document.getElementById('inputStatus');
+  const inputBarcode  = document.getElementById('inputBarcode');
 
-  const prev = {
-    orders: document.getElementById('prev-orders'),
-    driver: document.getElementById('prev-driver'),
-    penerima: document.getElementById('prev-penerima'),
-    status: document.getElementById('prev-status'),
-    caption: document.getElementById('prev-caption'),
-  };
+  const viewOrders   = document.getElementById('viewOrders');
+  const viewDriver   = document.getElementById('viewDriver');
+  const viewPenerima = document.getElementById('viewPenerima');
+  const viewStatus   = document.getElementById('viewStatus');
+  const captionCode  = document.getElementById('captionCode');
 
-  function renderBarcode() {
-    const value = els.barcode.value.trim() || ' ';
-    try {
-      JsBarcode('#barcode-svg', value, {
+  function renderBarcode(){
+    const code = inputBarcode.value.trim() || ' ';
+    try{
+      JsBarcode('#barcode', code, {
         format: 'CODE128',
         width: 2,
         height: 170,
@@ -365,70 +355,75 @@
         displayValue: false,
         flat: true
       });
-    } catch (e) {
+    }catch(e){
       console.error('Barcode error:', e);
     }
   }
 
-  function renderPreview() {
-    prev.orders.textContent = els.orders.value;
-    prev.driver.textContent = els.driver.value;
-    prev.penerima.textContent = els.penerima.value || '-';
+  function updatePreview(){
+    viewOrders.textContent = inputOrders.value || '0';
+    viewDriver.textContent = inputDriver.value || '-';
+    viewPenerima.textContent = inputPenerima.value || '-';
 
-    const statusVal = els.status.value;
-    prev.status.textContent = statusVal;
-    const colors = statusColors[statusVal] || statusColors['Tertunda'];
-    prev.status.style.background = colors.bg;
-    prev.status.style.color = colors.fg;
+    const status = inputStatus.value;
+    viewStatus.textContent = status;
+    const colors = statusColors[status] || statusColors['Tertunda'];
+    viewStatus.style.background = colors.bg;
+    viewStatus.style.color = colors.color;
 
-    const code = els.barcode.value.trim() || '-';
-    prev.caption.innerHTML = `Harap tunjukan barcode [${code}]<br>kepada operator untuk memulai<br>penyerahan`;
+    captionCode.textContent = inputBarcode.value.trim() || '-';
 
     renderBarcode();
   }
 
-  Object.values(els).forEach(el => {
-    el.addEventListener('input', renderPreview);
-    el.addEventListener('change', renderPreview);
+  [inputOrders, inputDriver, inputPenerima, inputStatus, inputBarcode].forEach(el=>{
+    el.addEventListener('input', updatePreview);
+    el.addEventListener('change', updatePreview);
   });
 
-  document.getElementById('btn-generate').addEventListener('click', renderPreview);
+  document.getElementById('generateBtn').addEventListener('click', updatePreview);
 
-  document.getElementById('btn-print').addEventListener('click', () => {
-    window.print();
-  });
-
-  document.getElementById('btn-save').addEventListener('click', () => {
-    const svg = document.getElementById('barcode-svg');
+  document.getElementById('saveBtn').addEventListener('click', function(){
+    const svg = document.getElementById('barcode');
     const svgData = new XMLSerializer().serializeToString(svg);
-    const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+    const svgBlob = new Blob([svgData], {type:'image/svg+xml;charset=utf-8'});
     const url = URL.createObjectURL(svgBlob);
-
     const img = new Image();
-    img.onload = () => {
+    img.onload = function(){
       const canvas = document.createElement('canvas');
       const scale = 3;
-      canvas.width = img.width * scale;
-      canvas.height = img.height * scale;
+      canvas.width = img.width * scale || 800;
+      canvas.height = img.height * scale || 170*scale;
       const ctx = canvas.getContext('2d');
       ctx.fillStyle = '#FFFFFF';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.scale(scale, scale);
-      ctx.drawImage(img, 0, 0);
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       URL.revokeObjectURL(url);
-
-      canvas.toBlob((blob) => {
-        const link = document.createElement('a');
-        link.download = `barcode-${els.barcode.value.trim() || 'export'}.png`;
-        link.href = URL.createObjectURL(blob);
-        link.click();
+      canvas.toBlob(function(blob){
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = (inputBarcode.value.trim() || 'barcode') + '.png';
+        a.click();
       });
     };
     img.src = url;
   });
 
-  // initial render
-  renderPreview();
+  document.getElementById('printBtn').addEventListener('click', function(){
+    window.print();
+  });
+
+  document.getElementById('backBtn').addEventListener('click', function(){
+    if(history.length > 1){ history.back(); }
+  });
+
+  document.getElementById('refreshBtn').addEventListener('click', function(){
+    updatePreview();
+  });
+
+  window.addEventListener('load', updatePreview);
+  updatePreview();
+})();
 </script>
 
 </body>
